@@ -1,29 +1,41 @@
 #!/usr/bin/env bash
-# Configure Nginx so that its HTTP response contains
-# a custom header
-#
-balancer="\
-frontend haproxy_balancer
+# Installs HAProxy version 2.6 with the following configurations:
+#+    Enables management via the init script.
+#+    Distributes requests using a round-robin algorithm.
+
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:vbernat/haproxy-2.6
+apt-get update
+apt-get install -y haproxy=2.6.\*
+
+echo "ENABLED=1" >> /etc/default/haproxy
+mv /etc/haproxy/haproxy.cfg{,.original}
+touch /etc/haproxy/haproxy.cfg
+
+printf %s "global
+    log 127.0.0.1 local0 notice
+    maxconn 2000
+    user haproxy
+    group haproxy
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    retries 3
+    option redispatch
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
+frontend abnb
     bind *:80
     mode http
-    default_backend webservers
-    
-backend webservers
+    default_backend abnb_backend
+backend abnb_backend
     balance roundrobin
-    server 368670-web-01 100.25.192.173:80 check
-    server 368670-web-02 54.237.125.138:80 check
-"
-# Update packages
-apt-get -y update
-apt-get -y upgrade
+    server 375-web-01 54.157.174.92:80 check
+    server 375-web-02 54.237.125.138:80 check
 
-# Add HAProxy PPA
-apt-get -y install software-properties-common
-add-apt-repository -y ppa:vbernat/haproxy-2.5
-apt-get -y update
+" >> /etc/haproxy/haproxy.cfg
 
-# Install HAProxy
-apt-get -y install haproxy
-cp -a /etc/haproxy/haproxy.cfg{,.orig}
-echo "$balancer" >> /etc/haproxy/haproxy.cfg
-service haproxy restart
+service haproxy start
