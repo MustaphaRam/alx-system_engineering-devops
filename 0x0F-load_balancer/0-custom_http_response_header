@@ -5,7 +5,7 @@ apt update
 apt install -y nginx
 
 echo "Hello World" > /var/www/html/index.html
-echo "Ceci n'est pas une page" > /var/www/html/404.html
+echo "Not fond page" > /var/www/html/404.html
 
 printf %s "server {
     listen 80;
@@ -14,7 +14,7 @@ printf %s "server {
     root /var/www/html;
     index index.html;
     location /redirect_me {
-        return 301 https://www.google.com/;
+        return 301 https://github.com/MustaphaRam;
     }
     error_page 404 /404.html;
 }" > /etc/nginx/sites-enabled/default
