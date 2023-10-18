@@ -1,0 +1,32 @@
+
+File = mysql-bin.000001
+Position = 154
+
+GRANT REPLICATION CLIENT ON *.* TO 'holberton_user'@'localhost';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'holberton_user'@'localhost';
+
+#TASK2
+CREATE DATABASE tyrell_corp;
+USE tyrell_corp;
+CREATE TABLE nexus6 (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255)
+);
+CREATE TABLE nexus6 ( id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) );
+INSERT INTO nexus6 (name) VALUES ('Leon');
+SELECT * FROM nexus6;
+SHOW GRANTS FOR 'holberton_user'@'localhost';
+GRANT SELECT ON tyrell_corp.nexus6 TO 'holberton_user'@'localhost';
+
+#TASK 3
+CREATE USER 'replica_user'@'%' IDENTIFIED BY 'projectcorrection280hbtn';
+GRANT REPLICATION SLAVE ON *.* TO 'replica_user'@'%';
+GRANT SELECT ON mysql.user TO 'holberton_user'@'locaLhost';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'replica_user'@'%';
+
+****************************
+CHANGE MASTER TO MASTER_HOST='35.174.211.61', MASTER_USER='replica_user', MASTER_PASSWORD='projectcorrection280hbtn', MASTER_LOG_FILE='mysql-bin.000001', MASTER_LOG_POS=154;
+
+show slave status\G
