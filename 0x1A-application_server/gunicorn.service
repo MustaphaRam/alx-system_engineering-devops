@@ -1,0 +1,17 @@
+#gunicorn systemd file
+
+[Unit]
+Description=Gunicorn instance to serve airbnb project
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/AirBnB_clone_v4
+ExecStart=gunicorn --workers 3 --bind 0.0.0.0:5003 web_dynamic.2-hbnb:app --errors-logfile /tmp/airbnb-error.log
+Restart=always
+StandardOutput=append:/tmp/airbnb-access.log
+StandardError=append:/tmp/airbnb-errors.log
+SyslogIdentifier=gunicon
+
+[Install]
+WantedBy=multi-user.target
