@@ -6,12 +6,10 @@ After=network.target
 
 [Service]
 User=ubuntu
+RuntimeDirectory=gunicorn
 WorkingDirectory=/home/ubuntu/AirBnB_clone_v4
-ExecStart=gunicorn --workers 3 --bind 0.0.0.0:5003 web_dynamic.2-hbnb:app --errors-logfile /tmp/airbnb-error.log
-Restart=always
-StandardOutput=append:/tmp/airbnb-access.log
-StandardError=append:/tmp/airbnb-errors.log
-SyslogIdentifier=gunicorn
+ExecStart=/home/ubuntu/airbnb2/bin/gunicorn -b 0.0.0.0:5003 --workers 3 --access-logfile /tmp/airbnb-access.log --error-logfile /tmp/airbnb-error.log web_dynamic.2-hbnb:app
+ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target
