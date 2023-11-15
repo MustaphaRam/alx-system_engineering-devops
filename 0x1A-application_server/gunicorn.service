@@ -11,7 +11,7 @@ ExecStart=gunicorn --workers 3 --bind 0.0.0.0:5003 web_dynamic.2-hbnb:app --erro
 Restart=always
 StandardOutput=append:/tmp/airbnb-access.log
 StandardError=append:/tmp/airbnb-errors.log
-SyslogIdentifier=gunicon
+SyslogIdentifier=gunicorn
 
 [Install]
 WantedBy=multi-user.target
